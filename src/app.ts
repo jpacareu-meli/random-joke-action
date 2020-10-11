@@ -4,7 +4,7 @@ import { getMainParameters, getRandomJoke } from "./utils";
 
 async function run() {
   try {
-    let { GITHUB_REPOSITORY, GITHUB_REPOSITORY_OWNER, GITHUB_TOKEN, GITHUB_PULL_REQUEST_NUMBER } = getMainParameters();
+    const { GITHUB_REPOSITORY, GITHUB_REPOSITORY_OWNER, GITHUB_TOKEN, GITHUB_PULL_REQUEST_NUMBER } = getMainParameters();
     const octokit = github.getOctokit(GITHUB_TOKEN);
 
     if (!Number.isInteger(GITHUB_PULL_REQUEST_NUMBER)) {

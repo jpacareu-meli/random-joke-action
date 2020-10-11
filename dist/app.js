@@ -34,7 +34,7 @@ const utils_1 = require("./utils");
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let { GITHUB_REPOSITORY, GITHUB_REPOSITORY_OWNER, GITHUB_TOKEN, GITHUB_PULL_REQUEST_NUMBER } = utils_1.getMainParameters();
+            const { GITHUB_REPOSITORY, GITHUB_REPOSITORY_OWNER, GITHUB_TOKEN, GITHUB_PULL_REQUEST_NUMBER } = utils_1.getMainParameters();
             const octokit = github.getOctokit(GITHUB_TOKEN);
             if (!Number.isInteger(GITHUB_PULL_REQUEST_NUMBER)) {
                 throw new Error("Pull request number is required");

@@ -27,10 +27,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRandomJoke = exports.getMainParameters = void 0;
 const core = __importStar(require("@actions/core"));
 const github = __importStar(require("@actions/github"));
+const axios_1 = __importDefault(require("axios"));
 exports.getMainParameters = () => {
     var _a, _b;
     const GITHUB_TOKEN = core.getInput("GITHUB_TOKEN", { required: true });
@@ -45,9 +49,9 @@ exports.getMainParameters = () => {
     };
 };
 exports.getRandomJoke = () => __awaiter(void 0, void 0, void 0, function* () {
-    const resp = yield fetch("https://official-joke-api.appspot.com/random_joke").then((res) => res.json());
+    const { data } = yield axios_1.default.get("https://official-joke-api.appspot.com/random_joke");
     return `Random joke of the day:
-  ${resp.setup}
+  ${data.setup}
 
-  ${resp.punchline}`;
+  ${data.punchline}`;
 });

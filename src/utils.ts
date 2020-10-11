@@ -1,5 +1,6 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import axios from "axios";
 
 export const getMainParameters = () => {
   const GITHUB_TOKEN = core.getInput("GITHUB_TOKEN", { required: true });
@@ -16,9 +17,9 @@ export const getMainParameters = () => {
 };
 
 export const getRandomJoke = async () => {
-  const resp = await fetch("https://official-joke-api.appspot.com/random_joke").then((res) => res.json());
+  const { data } = await axios.get("https://official-joke-api.appspot.com/random_joke");
   return `Random joke of the day:
-  ${resp.setup}
+  ${data.setup}
 
-  ${resp.punchline}`;
+  ${data.punchline}`;
 };
