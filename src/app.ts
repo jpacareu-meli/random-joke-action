@@ -1,30 +1,23 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import { getMainParameters, getRandomJoke } from "./utils";
 
 async function run() {
   try {
-    const token = core.getInput("GITHUB_TOKEN", { required: true });
-    const { GITHUB_REPOSITORY_OWNER: repositoryOwner = "", GITHUB_REPOSITORY = "" } = process.env;
-    const octokit = github.getOctokit(token);
-    const { payload }: any = github.context;
-    const repositoryName = GITHUB_REPOSITORY.replace(`${repositoryOwner}/`, "");
+    let { GITHUB_REPOSITORY, GITHUB_REPOSITORY_OWNER, GITHUB_TOKEN, GITHUB_PULL_REQUEST_NUMBER } = getMainParameters();
+    const octokit = github.getOctokit(GITHUB_TOKEN);
 
-    if (!Number.isInteger(payload?.number)) {
+    if (!Number.isInteger(GITHUB_PULL_REQUEST_NUMBER)) {
       throw new Error("Pull request number is required");
     }
 
-    const res = await fetch("https://official-joke-api.appspot.com/random_joke").then((res) => res.json());
-
-    const joke = `Random joke of the day:
-    ${res.setup}
-
-    ${res.punchline}`;
+    const jokeResponse = await getRandomJoke();
 
     octokit.pulls.createReview({
-      owner: repositoryOwner,
-      repo: repositoryName,
-      pull_number: payload?.number,
-      body: joke,
+      owner: GITHUB_REPOSITORY_OWNER,
+      repo: GITHUB_REPOSITORY,
+      pull_number: GITHUB_PULL_REQUEST_NUMBER,
+      body: jokeResponse,
       event: "COMMENT",
     });
   } catch (error) {

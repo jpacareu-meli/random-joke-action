@@ -28,29 +28,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getRandomJoke = exports.getMainParameters = void 0;
 const core = __importStar(require("@actions/core"));
 const github = __importStar(require("@actions/github"));
-const utils_1 = require("./utils");
-function run() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            let { GITHUB_REPOSITORY, GITHUB_REPOSITORY_OWNER, GITHUB_TOKEN, GITHUB_PULL_REQUEST_NUMBER } = utils_1.getMainParameters();
-            const octokit = github.getOctokit(GITHUB_TOKEN);
-            if (!Number.isInteger(GITHUB_PULL_REQUEST_NUMBER)) {
-                throw new Error("Pull request number is required");
-            }
-            const jokeResponse = yield utils_1.getRandomJoke();
-            octokit.pulls.createReview({
-                owner: GITHUB_REPOSITORY_OWNER,
-                repo: GITHUB_REPOSITORY,
-                pull_number: GITHUB_PULL_REQUEST_NUMBER,
-                body: jokeResponse,
-                event: "COMMENT",
-            });
-        }
-        catch (error) {
-            core.setFailed(error.message);
-        }
-    });
-}
-run();
+exports.getMainParameters = () => {
+    var _a, _b;
+    const GITHUB_TOKEN = core.getInput("GITHUB_TOKEN", { required: true });
+    const { GITHUB_REPOSITORY_OWNER = "", GITHUB_REPOSITORY = "" } = process.env;
+    const GITHUB_REPOSITORY_NAME = GITHUB_REPOSITORY.replace(`${GITHUB_REPOSITORY_OWNER}/`, "");
+    const GITHUB_PULL_REQUEST_NUMBER = (_b = (_a = github.context) === null || _a === void 0 ? void 0 : _a.payload) === null || _b === void 0 ? void 0 : _b.number;
+    return {
+        GITHUB_TOKEN,
+        GITHUB_REPOSITORY_OWNER,
+        GITHUB_PULL_REQUEST_NUMBER,
+        GITHUB_REPOSITORY: GITHUB_REPOSITORY_NAME,
+    };
+};
+exports.getRandomJoke = () => __awaiter(void 0, void 0, void 0, function* () {
+    const resp = yield fetch("https://official-joke-api.appspot.com/random_joke").then((res) => res.json());
+    return `Random joke of the day:
+  ${resp.setup}
+
+  ${resp.punchline}`;
+});
