@@ -1,0 +1,9 @@
+# Metada file
+name: Automerge Backport Pull Request
+description: Action to approve and merge Backport Pull Request to develop
+inputs:
+  GITHUB_TOKEN:
+    description: The GitHub token used to modify the repository.
+runs:
+  using: "node12"
+  main: "dist/app.js"
