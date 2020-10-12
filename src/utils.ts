@@ -18,8 +18,11 @@ export const getMainParameters = () => {
 
 export const getRandomJoke = async () => {
   const { data } = await axios.get("https://official-joke-api.appspot.com/random_joke");
-  return `Random joke of the day:
+  return `**Random joke of the day**:
+
   ${data.setup}
 
-  ${data.punchline}`;
+  ${data.punchline}
+
+  😅`;
 };

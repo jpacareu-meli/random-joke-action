@@ -50,8 +50,11 @@ exports.getMainParameters = () => {
 };
 exports.getRandomJoke = () => __awaiter(void 0, void 0, void 0, function* () {
     const { data } = yield axios_1.default.get("https://official-joke-api.appspot.com/random_joke");
-    return `Random joke of the day:
+    return `**Random joke of the day**:
+
   ${data.setup}
 
-  ${data.punchline}`;
+  ${data.punchline}
+
+  😅`;
 });
